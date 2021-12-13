@@ -1,23 +1,22 @@
 // Dependencies
-import express, { urlencoded, json, static } from "express";
-import { join } from "path";
-import { readFile, writeFile } from "fs";
-import { promisify } from 'util"';
-import { allowedNodeEnvironmentFlags } from "process";
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
+const util = require("util");
 
 // Handling Asynchronous Processes
-const readFileAsync = promisify(readFile);
-const writeFileAsync = promisify(writeFile);
+const readFileAsync = util.promisify(fs.readFile);
+const writeFileAsync = util.promisify(fs.writeFile);
 
 // Setting Up server
 const app = express();
 const PORT = process.env.PORT || 5500;
 
-app.use(urlencoded({ extended: true }));
-app.use(json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Static Middleware
-app.use(static("public"));
+app.use(express.static("public"));
 
 
 // API Route | "get" request
@@ -63,15 +62,15 @@ app.delete("/api/notes/:id",function(req, req) {
 
 //HTML Routes
 app.get("/notes", function(req, res) {
-    res.sendFile(join(__dirname, "./public/notes.html"));
+    res.sendFile(path.join(__dirname, "./public/notes.html"));
 });
 
 app.get("/", function(req, res) {
-            res.sendFile(join(__dirname, "./public/index.html"));
+            res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
 app.get("+", function(req, res) {
-    res.sendFile(join(__dirname, "./public/index.html"));
+    res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
 // Listening Function
